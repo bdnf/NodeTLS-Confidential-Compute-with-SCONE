@@ -5,15 +5,15 @@ fs = require("fs");
 console.log('Example tls app start!');
 console.log('read the secret :'+process.env.GREETING)
 
-const kyeFilePath = '/app/key.pem';
+const keyFilePath = '/app/key.pem';
 const certFilePath = '/app/cert.pem';
 
 try {
-  if (fs.existsSync(kyeFilePath)) {
-    console.log( kyeFilePath + " exists.")
+  if (fs.existsSync(keyFilePath)) {
+    console.log( keyFilePath + " exists.")
     //file exists
   }  else {
-    console.log( kyeFilePath + " doesn't exist.")
+    console.log( keyFilePath + " doesn't exist.")
   }
 } catch(err) {
   console.error(err)
@@ -36,9 +36,13 @@ app.get('/', function (req, res) {
   res.send('Hello World!' + process.env.GREETING);
 });
 
-app.listen(443, function () {
+const options = {
+  key: fs.readFileSync(keyFilePath),
+  cert: fs.readFileSync(certFilePath)
+};
+
+var app = express();
+https.createServer(options, app).listen(8443, function() {
   console.log('Example tls app listening on port 443!');
   console.log('scone mode is :'+process.env.GREETING)
-});
-
-//https.createServer(options, app).listen(443);
+});;

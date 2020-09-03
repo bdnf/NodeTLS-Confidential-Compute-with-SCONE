@@ -9,13 +9,7 @@ services:
    - name: application
      image_name: node10-hello-tls:latest
      mrenclaves: [e9744ef0e1123da5772b4440bc186c6bf19cad257d326215dfdf76cdb93c83d8]
-#[e9744ef0e1123da5772b4440bc186c6bf19cad257d326215dfdf76cdb93c83d8]
-#[e9744ef0e1123da5772b4440bc186c6bf19cad257d326215dfdf76cdb93c83d8]
-#[e9744ef0e1123da5772b4440bc186c6bf19cad257d326215dfdf76cdb93c83d8]
-#[e9744ef0e1123da5772b4440bc186c6bf19cad257d326215dfdf76cdb93c83d8]
-#[e15d9d8a385ca8134da9c95a737381a1dc8c641eca3be0314e6f2c96819707ad]
      command: node /app/app.js
-#     command: bash ls /app
      pwd: /
      environment:
         GREETING: hello from hello world-node-tls!
