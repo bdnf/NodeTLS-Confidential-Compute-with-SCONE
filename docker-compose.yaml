@@ -1,0 +1,60 @@
+version: '3.2'
+services:
+    las:
+        image: sconecuratedimages/services:las-scone4.2.1
+        devices:
+          - "/dev/isgx"
+        ports:
+          - target: 18766
+            published: 18766
+            protocol: tcp
+            mode: host
+
+    cas:
+        
+        command: sh -c "SCONE_HEAP=1G cas -c /etc/cas/cas.toml"
+        environment:
+         - SCONE_LOG=7
+         - SCONE_MODE=HW
+        image: sconecuratedimages/services:cas-scone4.2.1
+        devices:
+           - "/dev/isgx"
+        ports:
+          - target: 8081
+            published: 8081
+            protocol: tcp
+            mode: host
+          - target: 18765
+            published: 18765
+            protocol: tcp
+            mode: host
+    node:
+      build:
+        context: ./node-example
+      image: node10-hello-tls:latest # build image with this name
+      container_name: node-example
+      devices:
+           - "/dev/isgx"
+      environment:
+         - SCONE_CAS_ADDR=cas:18765 
+         - SCONE_LAS_ADDR=las:18766 
+         - SCONE_VERSION=1 
+         - SCONE_LOG=7
+         - SCONE_CONFIG_ID=helloworld-node-tls/application          
+
+    node-debug:
+      build:
+        context: ./node-example
+      image: node10-hello-tls:latest 
+      container_name: node-example-debug
+      entrypoint: sh
+      tty: true
+      stdin_open: true
+      devices:
+           - "/dev/isgx"
+      environment:
+         - SCONE_CAS_ADDR=cas:18765
+         - SCONE_LAS_ADDR=las:18766
+         - SCONE_VERSION=1
+         - SCONE_LOG=7
+         - SCONE_CONFIG_ID=helloworld-node-tls/application
